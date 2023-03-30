@@ -2,6 +2,8 @@ export class RepositoryService {
   /**
    * @param { DatabaseService } databaseService
    */
+
+  // DI
   constructor({ databaseService }) {
     this.databaseService = databaseService;
   }
@@ -10,6 +12,10 @@ export class RepositoryService {
    * @param { import('mysql2/promise').Connection } connection
    * @returns {Promise<import('mysql2/promise').Connection>}
    */
+
+  // Непонятно почему в аргументах функции есть connection, если в коде это не используется
+  // Если есть connection, то зачем вызывать эту функцию?
+  // Почему нельзя создавать this.connection в конструкторе?
   async getConnection(connection) {
     return connection || this.databaseService.getConnection();
   }

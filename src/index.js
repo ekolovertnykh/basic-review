@@ -7,6 +7,8 @@ import { RepositoryService } from './services/repository.service';
 import { UserService } from './services/user.service';
 import { PutUsersController } from './controllers/put-users.controller';
 
+// Это нужно вынести в другой файл
+// Переменные из .env нужно валидировать, а не использовать ||
 const pool = mysql.createPool({
   host: process.env.MYSQL_HOST || 'localhost',
   port: process.env.MYSQL_PORT || '3306',
@@ -16,8 +18,10 @@ const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: process.env.MYSQL_CONNECTION_LIMIT || 100,
   queueLimit: 0,
+  // Если не использовать лимит, то очередь из обращений к БД может стать бесконечно большой
 });
 
+// Тут можно использовать какой-нибудь контейнер, например inversify
 const databaseService = new DatabaseService(pool);
 const emailService = new EmailService();
 const repositoryService = new RepositoryService({
@@ -32,6 +36,7 @@ app.use(bodyParser({
   },
 }));
 app.use(async (ctx, next) => {
+  // Для каждого входящего запроса не обязательно создавать новый экземпляр сервиса
   ctx.userService = new UserService({
     repositoryService,
     emailService,

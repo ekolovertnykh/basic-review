@@ -30,6 +30,8 @@ export class DatabaseService {
       throw error;
     }
 
+    // Если будет exception, то этот result не вернется.
+    // В таком случае его можно объвить в блоке try и там же возвращать после коммита
     return result;
   }
 }
